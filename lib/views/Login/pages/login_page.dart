@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:travel_app/controllers/auth_controller.dart';
+import 'package:travel_app/views/main_page.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -23,24 +24,14 @@ class LoginPage extends StatelessWidget {
             final user = authController.user.value;
 
             if (user != null) {
-              // Kullanıcı giriş yaptı
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Hoşgeldin, ${user.displayName ?? ''}",
-                    style: const TextStyle(
-                      fontSize: 24,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: authController.signOut,
-                    child: const Text("Çıkış Yap"),
-                  ),
-                ],
-              );
+              // Kullanıcı giriş yaptı MainPage → HomePage
+
+              Future.microtask(() {
+                Get.offAll(() => MainPage());
+              });
+
+              // Geçiş yapılırken boş bir container gösterebilirsin
+              return const Center(child: CircularProgressIndicator());
             }
 
             // Kullanıcı giriş yapmamış
@@ -50,9 +41,10 @@ class LoginPage extends StatelessWidget {
                 const Text(
                   "Hoşgeldiniz",
                   style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(height: 50),
 
@@ -69,7 +61,7 @@ class LoginPage extends StatelessWidget {
                           color: Colors.black26,
                           blurRadius: 4,
                           offset: Offset(2, 2),
-                        )
+                        ),
                       ],
                     ),
                     child: Image.network(
