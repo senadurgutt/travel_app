@@ -6,13 +6,11 @@ class ImportService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Future<void> importTravels() async {
-  try {
     // JSON dosyasını oku
     final String jsonString =
         await rootBundle.loadString('assets/data/travels.json');
     final List<dynamic> travels = json.decode(jsonString);
 
-    int count = 0;
 
     // Firestore'a ekle
     for (var travel in travels) {
@@ -29,15 +27,6 @@ class ImportService {
         'isFavorite': travel['isFavorite'] ?? false,
       }, SetOptions(merge: true));
 
-      count++;
-      print("✅ $count / ${travels.length} travel yüklendi: ${travel['title']}");
     }
-
-    print("🎉 Tüm travels başarıyla Firestore'a aktarıldı!");
-  } catch (e) {
-    print("❌ Travels import hatası: $e");
-  }
-}
-
-  
+  } 
 }
