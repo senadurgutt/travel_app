@@ -1,0 +1,18 @@
+{
+  "favorites": "Favoriten",
+  "home": "Startseite",
+  "profile": "Profil",
+  "language": "Sprachen",
+  "settings": "Einstellungen",
+  "logout": "Abmelden",
+  "select_category": "Kategorie auswählen",
+  "select_country": "Land auswählen",
+  "select_region": "Region auswählen",
+  "no_data": "Noch keine Daten",
+  "dates_range": "{start} - {end}",
+  "turkish": "Türkisch (TR)",
+  "german": "Deutsch (DE)",
+  "english": "Englisch (EN)"
+
+
+}

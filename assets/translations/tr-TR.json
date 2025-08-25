@@ -1,0 +1,17 @@
+{
+  "favorites": "Favoriler",
+  "home": "Ana Sayfa",
+  "profile": "Profil",
+  "language": "Diller",
+  "settings": "Ayarlar",
+  "logout": "Çıkış Yap",
+  "select_category": "Kategori seçiniz",
+  "select_country": "Ülke seçiniz",
+  "select_region": "Şehir seçiniz",
+  "no_data": "Henüz veri yok",
+  "dates_range": "{start} - {end}",
+  "turkish": "Türkçe (TR)",
+  "german": "Almanca (DE)",
+  "english": "İngilizce (EN)",
+  "no_travel_found": "SEYAHAT BULUNAMADI"
+}
