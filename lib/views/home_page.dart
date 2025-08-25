@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:travel_app/controllers/travel_controller.dart';
+import 'package:travel_app/widgets/travel_cards_widget.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
-  final selectedCategory = RxnString();
-  final selectedRegion = RxnString();
-  final selectedCountry = RxnString();
-
-  // Örnek dropdown verileri (ileride Firestore’dan gelecek)
-  final categories = ["Kültür", "Doğa", "Macera"];
-  final regions = ["Berlin", "Viyana", "Zürih"];
-  final countries = ["Almanya", "Avusturya", "İsviçre"];
+  final TravelController travelController = Get.put(TravelController());
 
   @override
   Widget build(BuildContext context) {
@@ -19,106 +14,103 @@ class HomePage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
+            // KATEGORİ
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Obx(() => DropdownButtonFormField<String>(
-                value: selectedCategory.value,
-                hint: Text("Kategori seçiniz"),
-                items: categories.map((c) => DropdownMenuItem(
-                  value: c,
-                  child: Text(c),
-                )).toList(),
-                onChanged: (val) {
-                  selectedCategory.value = val;
-                  selectedRegion.value = null;
-                  selectedCountry.value = null;
-                },
-              )),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Obx(() => DropdownButtonFormField<String>(
-                value: selectedRegion.value,
-                hint: Text("Bölge seçiniz"),
-                items: selectedCategory.value == null
-                    ? []
-                    : regions.map((r) => DropdownMenuItem(
-                        value: r,
-                        child: Text(r),
-                      )).toList(),
-                onChanged: (val) {
-                  selectedRegion.value = val;
-                  selectedCountry.value = null;
-                },
-              )),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Obx(() => DropdownButtonFormField<String>(
-                value: selectedCountry.value,
-                hint: Text("Ülke seçiniz"),
-                items: selectedRegion.value == null
-                    ? []
-                    : countries.map((r) => DropdownMenuItem(
-                        value: r,
-                        child: Text(r),
-                      )).toList(),
-                onChanged: (val) {
-                  selectedCountry.value = val;
-                },
-              )),
+              child: Obx(
+                () => DropdownButtonFormField<String>(
+                  value: travelController.selectedCategory.value,
+                  hint: const Text("Kategori seçiniz"),
+                  items: travelController.categories
+                      .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                      .toList(),
+                  onChanged: (val) {
+                    travelController.selectedCategory.value = val;
+                    // alt seçimleri sıfırla
+                    travelController.selectedCountry.value = null;
+                    travelController.selectedRegion.value = null;
+                  },
+                ),
+              ),
             ),
 
-// Travel Cards
-            Expanded(
-              child: PageView.builder(
-                itemCount: 5, // firestore’dan gelecek
-                controller: PageController(viewportFraction: 0.8),
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16)),
-                      elevation: 4,
-                      child: Stack(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Berlin Yaz Tatili",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold)),
-                                SizedBox(height: 4),
-                                Text("15 Temmuz 2025 - 25 Temmuz 2025"),
-                                SizedBox(height: 8),
-                                Text(
-                                  "Berlin'de müzeler, tarihi bölgeler ve kültürel etkinlikler...",
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Positioned(
-                            right: 12,
-                            top: 12,
-                            child: IconButton(
-                              icon: Icon(Icons.favorite_border),
-                              onPressed: () {
-                                // favorilere ekleme işlemi
-                              },
-                            ),
+            // ÜLKE
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Obx(() {
+                final canPickCountry =
+                    travelController.selectedCategory.value != null;
+                final countryItems = canPickCountry
+                    ? travelController.countries
+                          .map(
+                            (c) => DropdownMenuItem(value: c, child: Text(c)),
                           )
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+                          .toList()
+                    : <DropdownMenuItem<String>>[];
+
+                return DropdownButtonFormField<String>(
+                  value: travelController.selectedCountry.value,
+                  hint: const Text("Ülke seçiniz"),
+                  items: countryItems,
+                  onChanged: canPickCountry
+                      ? (val) {
+                          travelController.selectedCountry.value = val;
+                          // bölgeyi sıfırla
+                          travelController.selectedRegion.value = null;
+                        }
+                      : null,
+                );
+              }),
+            ),
+
+            // BÖLGE
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Obx(() {
+                final canPickRegion =
+                    travelController.selectedCategory.value != null &&
+                    travelController.selectedCountry.value != null;
+
+                final regionItems = canPickRegion
+                    ? travelController.regions
+                          .map(
+                            (r) => DropdownMenuItem(value: r, child: Text(r)),
+                          )
+                          .toList()
+                    : <DropdownMenuItem<String>>[];
+
+                return DropdownButtonFormField<String>(
+                  value: travelController.selectedRegion.value,
+                  hint: const Text("Bölge seçiniz"),
+                  items: regionItems,
+                  onChanged: canPickRegion
+                      ? (val) {
+                          travelController.selectedRegion.value = val;
+                        }
+                      : null,
+                );
+              }),
+            ),
+
+            // KART LİSTESİ
+            Expanded(
+              child: Obx(() {
+                final travels = travelController.filteredTravels;
+
+                if (travels.isEmpty) {
+                  return const Center(child: Text("Henüz veri yok"));
+                }
+
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+
+                  itemCount: travels.length,
+                  itemBuilder: (context, index) {
+                    return TravelCard(travel: travels[index]);
+                  },
+                );
+              }),
             ),
           ],
         ),
