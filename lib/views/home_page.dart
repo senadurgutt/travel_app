@@ -10,78 +10,68 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            // KATEGORİ
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Obx(
-                () => DropdownButtonFormField<String>(
-                  value: travelController.selectedCategory.value,
-                  hint: const Text("Kategori seçiniz"),
-                  items: travelController.categories
-                      .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                      .toList(),
-                  onChanged: (val) {
-                    travelController.selectedCategory.value = val;
-                    // alt seçimleri sıfırla
-                    travelController.selectedCountry.value = null;
-                    travelController.selectedRegion.value = null;
-                  },
-                ),
-              ),
-            ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+          child: Column(
+            children: [
+              SizedBox(height: 12),
 
-            // ÜLKE
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Obx(() {
+              // Kategori Dropdown
+              Obx(() => _buildDropdown(
+                    value: travelController.selectedCategory.value,
+                    hint: "Kategori seçiniz",
+                    items: travelController.categories,
+                    onChanged: (val) {
+                      travelController.selectedCategory.value = val;
+                      // Dependent filtreleri sıfırla
+                      travelController.selectedCountry.value = null;
+                      travelController.selectedRegion.value = null;
+                    },
+                  )),
+
+              SizedBox(height: 12),
+
+              // Ülke Dropdown
+              Obx(() {
                 final canPickCountry =
                     travelController.selectedCategory.value != null;
                 final countryItems = canPickCountry
                     ? travelController.countries
-                          .map(
-                            (c) => DropdownMenuItem(value: c, child: Text(c)),
-                          )
-                          .toList()
-                    : <DropdownMenuItem<String>>[];
+                    : <String>[];
 
-                return DropdownButtonFormField<String>(
+                return _buildDropdown(
                   value: travelController.selectedCountry.value,
-                  hint: const Text("Ülke seçiniz"),
+                  hint: "Ülke seçiniz",
                   items: countryItems,
                   onChanged: canPickCountry
                       ? (val) {
                           travelController.selectedCountry.value = val;
-                          // bölgeyi sıfırla
+                          // Bölgeyi sıfırla
                           travelController.selectedRegion.value = null;
                         }
                       : null,
                 );
               }),
-            ),
 
-            // BÖLGE
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Obx(() {
+              SizedBox(height: 12),
+
+              // Bölge Dropdown
+              Obx(() {
                 final canPickRegion =
                     travelController.selectedCategory.value != null &&
-                    travelController.selectedCountry.value != null;
+                        travelController.selectedCountry.value != null;
 
                 final regionItems = canPickRegion
                     ? travelController.regions
-                          .map(
-                            (r) => DropdownMenuItem(value: r, child: Text(r)),
-                          )
-                          .toList()
-                    : <DropdownMenuItem<String>>[];
+                    : <String>[];
 
-                return DropdownButtonFormField<String>(
+                return _buildDropdown(
                   value: travelController.selectedRegion.value,
-                  hint: const Text("Bölge seçiniz"),
+                  hint: "Bölge seçiniz",
                   items: regionItems,
                   onChanged: canPickRegion
                       ? (val) {
@@ -90,30 +80,63 @@ class HomePage extends StatelessWidget {
                       : null,
                 );
               }),
-            ),
 
-            // KART LİSTESİ
-            Expanded(
-              child: Obx(() {
-                final travels = travelController.filteredTravels;
+              SizedBox(height: 16),
 
-                if (travels.isEmpty) {
-                  return const Center(child: Text("Henüz veri yok"));
-                }
+              // Kart Listesi
+              Expanded(
+                child: Obx(() {
+                  final travels = travelController.filteredTravels;
 
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
+                  if (travels.isEmpty) {
+                    return Center(
+                        child: Text(
+                            "Seçilen filtrelere uygun bir seyahat bulunamadı"));
+                  }
 
-                  itemCount: travels.length,
-                  itemBuilder: (context, index) {
-                    return TravelCard(travel: travels[index]);
-                  },
-                );
-              }),
-            ),
-          ],
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: travels.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: EdgeInsets.only(right: 12),
+                        child: TravelCard(travel: travels[index]),
+                      );
+                    },
+                  );
+                }),
+              ),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  // Tekrarlayan dropdown widget
+  Widget _buildDropdown({
+    required String? value,
+    required String hint,
+    required List<String> items,
+    required void Function(String?)? onChanged,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 14),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300, width: 2),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: DropdownButtonFormField<String>(
+        value: value,
+        decoration: InputDecoration(border: InputBorder.none),
+        hint: Text(hint),
+        items: items
+            .map((e) => DropdownMenuItem<String>(
+                  value: e,
+                  child: Text(e),
+                ))
+            .toList(),
+        onChanged: onChanged,
       ),
     );
   }

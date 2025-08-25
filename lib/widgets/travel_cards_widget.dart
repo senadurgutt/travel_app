@@ -24,7 +24,7 @@ class TravelCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
       child: SizedBox(
         width: 300,
-        height: 50,
+        height: 200,
         child: Card(
           color: AppColors.primaryText,
           shape: RoundedRectangleBorder(
@@ -34,11 +34,10 @@ class TravelCard extends StatelessWidget {
           child: Stack(
             children: [
               Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: EdgeInsets.fromLTRB(16, 36, 16, 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 25),
                     Text(
                       travel['title'] ?? '',
                       style: TextStyle(
