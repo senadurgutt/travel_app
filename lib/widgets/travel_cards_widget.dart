@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:travel_app/controllers/travel_controller.dart';
+import 'package:travel_app/utils/colors.dart';
 
 class TravelCard extends StatelessWidget {
   final Map<String, dynamic> travel;
@@ -20,56 +21,74 @@ class TravelCard extends StatelessWidget {
     final controller = Get.find<TravelController>();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        elevation: 4,
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(travel['title'] ?? '',
-                      style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 4),
-                  Text(
-                    "$formattedStart - $formattedEnd",
-                    style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.w400),
-                  ),
-                  const SizedBox(height: 18),
-                  Text(
-                    travel['description'] ?? '',
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 17),
-                  ),
-                ],
+      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+      child: SizedBox(
+        width: 300,
+        height: 50,
+        child: Card(
+          color: AppColors.primaryText,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 4,
+          child: Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 25),
+                    Text(
+                      travel['title'] ?? '',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.background,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      "$formattedStart - $formattedEnd",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.background,
+                      ),
+                    ),
+                    SizedBox(height: 18),
+                    Text(
+                      travel['description'] ?? '',
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: AppColors.background,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            // Favori butonu
-            Positioned(
-              right: 8,
-              top: 8,
-              child: Obx(() {
-                // favori seti reactive
-                final isFav = controller.favorites.contains(travel['id']);
-                return IconButton(
-                  icon: Icon(
-                    isFav ? Icons.favorite : Icons.favorite_border,
-                    color: isFav ? Colors.red : Colors.grey,
-                  ),
-                  onPressed: () {
-                    controller.toggleFavorite(travel['id']);
-                  },
-                );
-              }),
-            ),
-          ],
+              // Favori butonu
+              Positioned(
+                right: 8,
+                top: 4,
+                child: Obx(() {
+                  final isFav = controller.favorites.contains(travel['id']);
+                  return IconButton(
+                    icon: Icon(
+                      isFav ? Icons.favorite : Icons.favorite_border,
+                      color: isFav ? Colors.red : Colors.grey,
+                    ),
+                    onPressed: () {
+                      controller.toggleFavorite(travel['id']);
+                    },
+                  );
+                }),
+              ),
+            ],
+          ),
         ),
       ),
     );
