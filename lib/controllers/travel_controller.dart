@@ -106,14 +106,30 @@ var favorites = RxSet<String>();
 
   // filtrelere UYGUN travel listesi
   List<Map<String, dynamic>> get filteredTravels {
-    return travels.where((t) {
-      final matchCategory =
-          selectedCategory.value == null || t["category"] == selectedCategory.value;
-      final matchRegion =
-          selectedRegion.value == null || t["region"] == selectedRegion.value;
-      final matchCountry =
-          selectedCountry.value == null || t["country"] == selectedCountry.value;
-      return matchCategory && matchRegion && matchCountry;
-    }).toList();
-  }
+  final list = travels.where((t) {
+    final category = t["category"]?.toString();
+    final country = t["country"]?.toString();
+    final region = t["region"]?.toString();
+
+    final matchCategory = selectedCategory.value == null ||
+        category == selectedCategory.value;
+    final matchCountry = selectedCountry.value == null ||
+        country == selectedCountry.value;
+    final matchRegion = selectedRegion.value == null ||
+        region == selectedRegion.value;
+
+    return matchCategory && matchCountry && matchRegion;
+  }).toList();
+
+  // Tarih bazlı sıralama (en yakın tarih önde)
+  list.sort((a, b) {
+    final dateA = (a['startDate'] as Timestamp).toDate();
+    final dateB = (b['startDate'] as Timestamp).toDate();
+    return dateA.compareTo(dateB); // küçükten büyüğe
+  });
+
+  return list;
+}
+
+
 }

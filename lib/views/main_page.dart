@@ -36,7 +36,6 @@ class MainPage extends StatelessWidget {
             children: [
               // BAŞLIK
               Padding(
-                
                 padding: EdgeInsetsGeometry.only(top: 20.0 , left: 20),
                 child: Text(
                   pageTitles[currentIndex],
@@ -51,8 +50,8 @@ class MainPage extends StatelessWidget {
               // BORDER İÇİNDE SAYFALAR
               Expanded(
                 child: Container(
-                  margin: const EdgeInsets.all(12),
-                  padding: const EdgeInsets.all(16),
+                  margin: EdgeInsets.all(12),
+                  padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: AppColors.card,
                     border: Border.all(color: Colors.grey.shade300, width: 2),
