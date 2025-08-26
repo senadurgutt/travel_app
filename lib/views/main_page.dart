@@ -31,39 +31,34 @@ class MainPage extends StatelessWidget {
             children: [
               // ÜST BAŞLIK ALANI
               Padding(
-  padding: const EdgeInsets.only(top: 20.0, left: 20, right: 20),
-  child: SizedBox(
-    height: 48, 
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          pageTitles[currentIndex],
-          style: TextStyle(
-            color: AppColors.primaryText,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+                padding: const EdgeInsets.only(top: 20.0, left: 20, right: 20),
+                child: SizedBox(
+                  height: 48,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        pageTitles[currentIndex],
+                        style: TextStyle(
+                          color: AppColors.primaryText,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
 
-        // ikonlar...
-      ],
-    ),
-  ),
-),
-
+                      // ikonlar...
+                    ],
+                  ),
+                ),
+              ),
 
               // SABİT BEYAZ ALAN + ÜST RADIUS
               Expanded(
                 child: ClipRRect(
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(24)),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                   child: Material(
                     color: Colors.white,
-                    child: IndexedStack(
-                      index: currentIndex,
-                      children: pages,
-                    ),
+                    child: IndexedStack(index: currentIndex, children: pages),
                   ),
                 ),
               ),

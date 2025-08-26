@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:travel_app/controllers/auth_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:travel_app/utils/colors.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});

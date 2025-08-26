@@ -78,7 +78,7 @@ class TravelCard extends StatelessWidget {
                   return IconButton(
                     icon: Icon(
                       isFav ? Icons.favorite : Icons.favorite_border,
-                      color: isFav ? Colors.red : Colors.grey,
+                      color: isFav ? Colors.red : Colors.grey, size: 24,
                     ),
                     onPressed: () {
                       controller.toggleFavorite(travel['id']);
