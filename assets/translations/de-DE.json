@@ -12,7 +12,34 @@
   "dates_range": "{start} - {end}",
   "turkish": "Türkisch (TR)",
   "german": "Deutsch (DE)",
-  "english": "Englisch (EN)"
+  "english": "Englisch (EN)",
+  
+  "categories": {
+    "Festival": "Festival",
+    "Tarih": "Geschichte",
+    "Sanat": "Kunst",
+    "Doğa": "Natur",
+    "Kültür": "Kultur",
+    "Gastronomi": "Gastronomie",
+    "Macera": "Abenteuer"
+  },
+  "regions": {
+    "Sachsen": "Sachsen",
+    "Bern": "Bern",
+    "Tirol": "Tirol",
+    "Hessen": "Hessen",
+    "Wien": "Wien",
+    "Zürich": "Zürich",
+    "Vorarlberg": "Vorarlberg",
+    "Berlin": "Berlin",
+    "Bayern": "Bayern",
+    "Genève": "Genf",
+    "Luzern": "Luzern",
+    "Hamburg": "Hamburg",
+    "Steiermark": "Steiermark",
+    "Valais": "Wallis",
+    "Salzburg": "Salzburg"
+  }
 
 
 }

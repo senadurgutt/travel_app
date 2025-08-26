@@ -13,5 +13,34 @@
   "turkish": "Türkçe (TR)",
   "german": "Almanca (DE)",
   "english": "İngilizce (EN)",
-  "no_travel_found": "SEYAHAT BULUNAMADI"
+  "no_travel_found": "SEYAHAT BULUNAMADI",
+  "categories": {
+    "Festival": "Festival",
+    "Tarih": "Tarih",
+    "Sanat": "Sanat",
+    "Doğa": "Doğa",
+    "Kültür": "Kültür",
+    "Gastronomi": "Gastronomi",
+    "Macera": "Macera"
+  },
+  "regions": {
+    "Sachsen": "Sachsen",
+    "Bern": "Bern",
+    "Tirol": "Tirol",
+    "Hessen": "Hessen",
+    "Wien": "Wien",
+    "Zürich": "Zürich",
+    "Vorarlberg": "Vorarlberg",
+    "Berlin": "Berlin",
+    "Bayern": "Bayern",
+    "Genève": "Genève",
+    "Luzern": "Luzern",
+    "Hamburg": "Hamburg",
+    "Steiermark": "Steiermark",
+    "Valais": "Valais",
+    "Salzburg": "Salzburg"
+  }
+
 }
+
+
