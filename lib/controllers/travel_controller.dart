@@ -7,8 +7,7 @@ class TravelController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   var travels = <Map<String, dynamic>>[].obs;
-
-var favorites = RxSet<String>();
+  var favorites = RxSet<String>();
 
   var selectedCategory = RxnString();
   var selectedRegion = RxnString();
@@ -18,6 +17,7 @@ var favorites = RxSet<String>();
   void onInit() {
     super.onInit();
 
+    // Firestore'dan travels çek
     _db.collection('travels').snapshots().listen((snapshot) {
       travels.value = snapshot.docs.map((doc) {
         return {
@@ -25,12 +25,24 @@ var favorites = RxSet<String>();
           ...doc.data(),
         };
       }).toList();
+
+      _loadInitialFavorites();
     });
 
-    // Kullanıcının favorileri
+    // Kullanıcının favorilerini Firestore’dan çek
     _loadUserFavorites();
   }
 
+  //Firestore’dan gelen başlangıç favorilerini yükle
+  void _loadInitialFavorites() {
+    for (var t in travels) {
+      if (t['isFavorite'] == true) {
+        favorites.add(t['id']);
+      }
+    }
+  }
+
+  // Kullanıcı favorileirni firestıre yükler
   void _loadUserFavorites() {
     final user = _auth.currentUser;
     if (user == null) return;
@@ -50,7 +62,7 @@ var favorites = RxSet<String>();
     return favorites.contains(travelId);
   }
 
-  // Favori ekle/çıkar
+  // Fav ekle/çıkar
   Future<void> toggleFavorite(String travelId) async {
     final user = _auth.currentUser;
     if (user == null) return;
@@ -59,13 +71,15 @@ var favorites = RxSet<String>();
         _db.collection('users').doc(user.uid).collection('favorites').doc(travelId);
 
     if (favorites.contains(travelId)) {
+      favorites.remove(travelId);
       await favRef.delete();
     } else {
+      favorites.add(travelId);
       await favRef.set({"addedAt": FieldValue.serverTimestamp()});
     }
   }
 
-  //  Mevcut travels’tan kategorileri çıkar
+  // kategoriler
   List<String> get categories {
     final all = travels
         .map((t) => t["category"] as String?)
@@ -76,7 +90,7 @@ var favorites = RxSet<String>();
     return all;
   }
 
-  // ÜLKELER
+  // Ülkeler
   List<String> get countries {
     if (selectedCategory.value == null) return [];
     final all = travels
@@ -89,7 +103,7 @@ var favorites = RxSet<String>();
     return all;
   }
 
-  // KATEGORİ 
+  // Bölgeler
   List<String> get regions {
     if (selectedCategory.value == null || selectedCountry.value == null) return [];
     final all = travels
@@ -104,32 +118,35 @@ var favorites = RxSet<String>();
     return all;
   }
 
-  // filtrelere UYGUN travel listesi
+  // Filtrelenmiş travel listesi
   List<Map<String, dynamic>> get filteredTravels {
-  final list = travels.where((t) {
-    final category = t["category"]?.toString();
-    final country = t["country"]?.toString();
-    final region = t["region"]?.toString();
+    final list = travels.where((t) {
+      final category = t["category"]?.toString();
+      final country = t["country"]?.toString();
+      final region = t["region"]?.toString();
 
-    final matchCategory = selectedCategory.value == null ||
-        category == selectedCategory.value;
-    final matchCountry = selectedCountry.value == null ||
-        country == selectedCountry.value;
-    final matchRegion = selectedRegion.value == null ||
-        region == selectedRegion.value;
+      final matchCategory = selectedCategory.value == null ||
+          category == selectedCategory.value;
+      final matchCountry = selectedCountry.value == null ||
+          country == selectedCountry.value;
+      final matchRegion = selectedRegion.value == null ||
+          region == selectedRegion.value;
 
-    return matchCategory && matchCountry && matchRegion;
-  }).toList();
+      return matchCategory && matchCountry && matchRegion;
+    }).toList();
 
-  // Tarih bazlı sıralama (en yakın tarih önde)
-  list.sort((a, b) {
-    final dateA = (a['startDate'] as Timestamp).toDate();
-    final dateB = (b['startDate'] as Timestamp).toDate();
-    return dateA.compareTo(dateB); // küçükten büyüğe
-  });
+    // Tarih bazlı sıralama (en yakın tarih önde)
+    list.sort((a, b) {
+      final dateA = (a['startDate'] as Timestamp).toDate();
+      final dateB = (b['startDate'] as Timestamp).toDate();
+      return dateA.compareTo(dateB);
+    });
 
-  return list;
-}
+    return list;
+  }
 
-
+  // FAVORİ SAYFASI İÇİN GETTER
+  List<Map<String, dynamic>> get favoriteTravels {
+    return travels.where((t) => favorites.contains(t['id'])).toList();
+  }
 }
