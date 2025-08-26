@@ -29,55 +29,42 @@ class MainPage extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // BAŞLIK
-              // BAŞLIK + Çıkış
+              // ÜST BAŞLIK ALANI
               Padding(
-                padding: EdgeInsets.only(top: 20.0, left: 20, right: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Sol taraf: Sayfa başlığı
-                    Text(
-                      pageTitles[currentIndex],
-                      style: TextStyle(
-                        color: AppColors.primaryText,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+  padding: const EdgeInsets.only(top: 20.0, left: 20, right: 20),
+  child: SizedBox(
+    height: 48, 
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          pageTitles[currentIndex],
+          style: TextStyle(
+            color: AppColors.primaryText,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
 
-                    // settings ikonu sadece home sayfasında
-                    if (currentIndex == 1)
-                      IconButton(
-        icon: Icon(Icons.settings, color: Colors.white),
-        onPressed: () {
-          _showLanguageDialog(context);
-        },
-      ),
-                      // Logout ikonu sadece Profil sayfasında
-                    if (currentIndex == 2)
-                      IconButton(
-                        icon: Icon(Icons.logout, color: AppColors.primaryText),
-                        onPressed: () async {
-                          await authController.signOut();
-                              Get.offAll(LoginPage());
-                        },
-                      ),
-                  ],
-                ),
-              ),
+        // ikonlar...
+      ],
+    ),
+  ),
+),
 
-              // BORDER İÇİNDE SAYFALAR
+
+              // SABİT BEYAZ ALAN + ÜST RADIUS
               Expanded(
-                child: Container(
-                  margin: EdgeInsets.all(12),
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppColors.card,
-                    border: Border.all(color: Colors.grey.shade300, width: 2),
-                    borderRadius: BorderRadius.circular(16),
+                child: ClipRRect(
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(24)),
+                  child: Material(
+                    color: Colors.white,
+                    child: IndexedStack(
+                      index: currentIndex,
+                      children: pages,
+                    ),
                   ),
-                  child: IndexedStack(index: currentIndex, children: pages),
                 ),
               ),
             ],
