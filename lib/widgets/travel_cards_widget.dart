@@ -10,18 +10,48 @@ class TravelCard extends StatelessWidget {
 
   const TravelCard({super.key, required this.travel});
 
+  DateTime parseDate(dynamic value) {
+    if (value == null) return DateTime.now();
+    if (value is DateTime) return value;
+    if (value is String) return DateTime.tryParse(value) ?? DateTime.now();
+    if (value is Timestamp) return value.toDate();
+    return DateTime.now();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final DateTime startDate = (travel['startDate'] as Timestamp).toDate();
-    final DateTime endDate = (travel['endDate'] as Timestamp).toDate();
-
-    final String formattedStart = DateFormat("dd MMM yyyy").format(startDate);
-    final String formattedEnd = DateFormat("dd MMM yyyy").format(endDate);
-
     final controller = Get.find<TravelController>();
 
+    final startDate = parseDate(travel['startDate']);
+    final endDate = parseDate(travel['endDate']);
+    final formattedStart = DateFormat("dd MMM yyyy").format(startDate);
+    final formattedEnd = DateFormat("dd MMM yyyy").format(endDate);
+
+    // Çok dilli veriler
+    String getField(Map<String, dynamic> map) {
+      final lang = controller.lang.value;
+      if (map[lang] != null && map[lang] is String) return map[lang];
+      return '';
+    }
+
+    final title = travel['title'] is Map
+        ? getField(travel['title'])
+        : travel['title'] ?? '';
+
+    final description = travel['description'] is Map
+        ? getField(travel['description'])
+        : travel['description'] ?? '';
+
+    final country = travel['country'] is Map
+        ? getField(travel['country'])
+        : travel['country'] ?? '';
+
+    final region = travel['region'] is Map
+        ? getField(travel['region'])
+        : travel['region'] ?? '';
+
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
       child: SizedBox(
         width: 300,
         height: 200,
@@ -34,19 +64,21 @@ class TravelCard extends StatelessWidget {
           child: Stack(
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(16, 36, 16, 16),
+                padding: const EdgeInsets.fromLTRB(16, 36, 16, 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Başlık
                     Text(
-                      travel['title'] ?? '',
+                      title,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: AppColors.background,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
+                    // Tarihler
                     Text(
                       "$formattedStart - $formattedEnd",
                       style: TextStyle(
@@ -55,20 +87,30 @@ class TravelCard extends StatelessWidget {
                         color: AppColors.background,
                       ),
                     ),
-                    SizedBox(height: 18),
+                    const SizedBox(height: 8),
+                    // Country ve Region
                     Text(
-                      travel['description'] ?? '',
+                      "$country • $region",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.background.withOpacity(0.7),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    // Açıklama
+                    Text(
+                      description,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 17,
+                        fontSize: 16,
                         color: AppColors.background,
                       ),
                     ),
                   ],
                 ),
               ),
-
               // Favori butonu
               Positioned(
                 right: 8,
@@ -78,11 +120,10 @@ class TravelCard extends StatelessWidget {
                   return IconButton(
                     icon: Icon(
                       isFav ? Icons.favorite : Icons.favorite_border,
-                      color: isFav ? Colors.red : Colors.grey, size: 24,
+                      color: isFav ? Colors.red : Colors.grey,
+                      size: 24,
                     ),
-                    onPressed: () {
-                      controller.toggleFavorite(travel['id']);
-                    },
+                    onPressed: () => controller.toggleFavorite(travel['id']),
                   );
                 }),
               ),
