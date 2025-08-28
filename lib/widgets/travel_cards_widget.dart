@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:travel_app/controllers/travel_controller.dart';
 import 'package:travel_app/utils/colors.dart';
+import 'package:travel_app/utils/date_format.dart';
 
 class TravelCard extends StatelessWidget {
   final Map<String, dynamic> travel;
@@ -17,14 +18,6 @@ class TravelCard extends StatelessWidget {
     return DateTime.now();
   }
 
-  String formatDateNumeric(DateTime date) {
-  final day = date.day.toString().padLeft(2, '0'); 
-  final month = date.month.toString().padLeft(2, '0');
-  final year = date.year.toString();
-
-  return "$day/$month/$year";
-}
-
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TravelController>();
@@ -33,7 +26,7 @@ class TravelCard extends StatelessWidget {
     final endDate = parseDate(travel['endDate']);
 
     final formattedStart = formatDateNumeric(startDate);
-final formattedEnd = formatDateNumeric(endDate);
+    final formattedEnd = formatDateNumeric(endDate);
 
     // Çok dilli veriler
     String getField(Map<String, dynamic> map) {
@@ -95,6 +88,7 @@ final formattedEnd = formatDateNumeric(endDate);
                         color: AppColors.background,
                       ),
                     ),
+
                     SizedBox(height: 8),
                     // Country ve Region
                     Text(
