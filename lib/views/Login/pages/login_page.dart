@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:travel_app/controllers/auth_controller.dart';
+import 'package:travel_app/utils/colors.dart';
 import 'package:travel_app/views/main_page.dart';
 
 class LoginPage extends StatelessWidget {
@@ -10,76 +11,105 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blue.shade400, Colors.purple.shade300],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Center(
-          child: Obx(() {
-            final user = authController.user.value;
+      body: Center(
+        child: Obx(() {
+          final user = authController.user.value;
 
-            if (user != null) {
-              // Kullanıcı giriş yaptı MainPage → HomePage
+          if (user != null) {
+            Future.microtask(() {
+              Get.offAll(() => MainPage());
+            });
+            return const CircularProgressIndicator();
+          }
 
-              Future.microtask(() {
-                Get.offAll(() => MainPage());
-              });
+          return Stack(
+            children: [
+              // Arka plan görseli
+              Positioned.fill(
+                child: Image.asset(
+                  "lib/utils/images/login.jpg",
+                  fit: BoxFit.cover,
+                ),
+              ),
 
-              // Geçiş yapılırken boş bir container gösterebilirsin
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            // Kullanıcı giriş yapmamış
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Hoşgeldiniz",
+              // Üstteki başlık
+              Positioned(
+                top: height * 0.25,
+                left: 0,
+                right: 0,
+                child: Text(
+"Bist du bereit für eine neue Route?",                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    fontFamily: "Pacifico",
+                    fontSize: 28,
+                    color: AppColors.primaryText,
+                    shadows: [
+                      Shadow(
+                        color: AppColors.background,
+                        offset: Offset(1, 1),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 50),
+              ),
 
-                //  Login Button
-                GestureDetector(
+              Positioned(
+                top: height * 0.40,
+                left: 0,
+                right: 0,
+                child: GestureDetector(
                   onTap: () => authController.signInWithGoogle(),
-                  child: Container(
-                    padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 4,
-                          offset: Offset(2, 2),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Google ikonu
+                      Container(
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.primaryText,
+                              blurRadius: 15,
+                              offset: Offset(2, 5),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Image.network(
-                      "https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg",
-                      width: 30,
-                      height: 30,
-                    ),
+                        child: Image.asset(
+                          "lib/utils/images/google.png",
+                          width: 40,
+                          height: 40,
+                        ),
+                      ),
+
+                      SizedBox(height: 15),
+
+                      Text(
+                        "Mit Google anmelden",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primaryText,
+                          shadows: [
+                            Shadow(
+                              color: AppColors.background,
+                              offset: Offset(1, 1),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 20),
-                const Text(
-                  "Google ile giriş yap",
-                  style: TextStyle(color: Colors.white70, fontSize: 16),
-                ),
-              ],
-            );
-          }),
-        ),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
