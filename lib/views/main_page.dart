@@ -29,15 +29,15 @@ class MainPage extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ÜST BAŞLIK ALANI
+              // ÜST BAŞLIK
               Padding(
-                padding: const EdgeInsets.only(top: 20.0, left: 20, right: 20),
+                padding: EdgeInsets.only(top: 20.0, left: 20, right: 20),
                 child: SizedBox(
                   height: 48,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Başlık
+                      // Dinamik sayfa başlığı
                       Text(
                         pageKeys[currentIndex].tr,
                         style: TextStyle(
@@ -47,17 +47,19 @@ class MainPage extends StatelessWidget {
                         ),
                       ),
 
-                      // Koşullu ikonlar
+                      // Sağ ikonlar
                       if (currentIndex == 1) // Home
                         IconButton(
-                          icon: Icon(Icons.settings),
+                          icon: const Icon(Icons.settings),
+                          tooltip: "settings".tr,
                           onPressed: () {
                             _showLanguageDialog(context);
                           },
                         ),
                       if (currentIndex == 2) // Profile
                         IconButton(
-                          icon: Icon(Icons.logout),
+                          icon: const Icon(Icons.logout),
+                          tooltip: "logout".tr,
                           onPressed: () async {
                             await authController.signOut();
                             Get.offAllNamed('/login');
@@ -68,7 +70,7 @@ class MainPage extends StatelessWidget {
                 ),
               ),
 
-              // SABİT BEYAZ ALAN + ÜST RADIUS
+              // ALT İÇERİK
               Expanded(
                 child: ClipRRect(
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -87,6 +89,7 @@ class MainPage extends StatelessWidget {
   }
 
   // Dil seçimi dialogu
+  
   void _showLanguageDialog(BuildContext context) {
   final travelController = Get.find<TravelController>();
 
@@ -94,31 +97,28 @@ class MainPage extends StatelessWidget {
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: Text("Diller"),
+        title: Text("language".tr),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              title: Text("Türkçe (TR)"),
+              title: Text("turkish".tr),
               onTap: () {
                 travelController.changeLang("tr");
-                Get.updateLocale(Locale('tr'));
                 Navigator.of(context).pop();
               },
             ),
             ListTile(
-              title: Text("Almanca (DE)"),
+              title: Text("german".tr),
               onTap: () {
                 travelController.changeLang("de");
-                Get.updateLocale(Locale('de'));
                 Navigator.of(context).pop();
               },
             ),
             ListTile(
-              title: Text("İngilizce (EN)"),
+              title: Text("english".tr),
               onTap: () {
                 travelController.changeLang("en");
-                Get.updateLocale(Locale('en'));
                 Navigator.of(context).pop();
               },
             ),
@@ -128,5 +128,6 @@ class MainPage extends StatelessWidget {
     },
   );
 }
+
 
 }
