@@ -648,8 +648,14 @@ class TravelController extends GetxController {
   }
 
   // Dil değiştirme
-  void changeLang(String newLang) {
+void changeLang(String newLang) {
   lang.value = newLang;
+
+  // Seçili değerler yeni dile göre artık geçersiz olabilir, sıfırla
+  selectedCountry.value = null;
+  selectedRegion.value = null;
+
+  // GetX güncellemesi
   if (newLang == "tr") {
     Get.updateLocale(Locale("tr", "TR"));
   } else if (newLang == "en") {
@@ -658,5 +664,6 @@ class TravelController extends GetxController {
     Get.updateLocale(Locale("de", "DE"));
   }
 }
+
 
 }

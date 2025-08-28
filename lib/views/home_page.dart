@@ -34,7 +34,12 @@ class HomePage extends StatelessWidget {
                     : <String>[];
 
                 return _buildDropdown(
-                  value: travelController.selectedCountry.value,
+                  value:
+                      countryItems.contains(
+                        travelController.selectedCountry.value,
+                      )
+                      ? travelController.selectedCountry.value
+                      : null,
                   hint: "select_country".tr,
                   items: countryItems,
                   onChanged: canPickCountry
@@ -59,7 +64,12 @@ class HomePage extends StatelessWidget {
                     : <String>[];
 
                 return _buildDropdown(
-                  value: travelController.selectedRegion.value,
+                  value:
+                      regionItems.contains(
+                        travelController.selectedRegion.value,
+                      )
+                      ? travelController.selectedRegion.value
+                      : null,
                   hint: "select_region".tr,
                   items: regionItems,
                   onChanged: canPickRegion
