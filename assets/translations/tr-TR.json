@@ -1,5 +1,8 @@
 {
   "favorites": "Favoriler",
+  "full_name": "İsim Soyisim",
+  "account_created": "Kayıt Tarihi",
+  "last_login": "Son Giriş Tarihi",
   "home": "Ana Sayfa",
   "profile": "Profil",
   "language": "Diller",
@@ -23,6 +26,20 @@
     "Gastronomi": "Gastronomi",
     "Macera": "Macera"
   },
+  "months": {
+      "January": "Ocak",
+      "February": "Şubat",
+      "March": "Mart",
+      "April": "Nisan",
+      "May": "Mayıs",
+      "June": "Haziran",
+      "July": "Temmuz",
+      "August": "Ağustos",
+      "September": "Eylül",
+      "October": "Ekim",
+      "November": "Kasım",
+      "December": "Aralık"
+    },
   "regions": {
     "Sachsen": "Sachsen",
     "Bern": "Bern",

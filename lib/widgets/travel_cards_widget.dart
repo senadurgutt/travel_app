@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:travel_app/controllers/travel_controller.dart';
 import 'package:travel_app/utils/colors.dart';
 
@@ -18,14 +17,23 @@ class TravelCard extends StatelessWidget {
     return DateTime.now();
   }
 
+  String formatDateNumeric(DateTime date) {
+  final day = date.day.toString().padLeft(2, '0'); 
+  final month = date.month.toString().padLeft(2, '0');
+  final year = date.year.toString();
+
+  return "$day/$month/$year";
+}
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TravelController>();
 
     final startDate = parseDate(travel['startDate']);
     final endDate = parseDate(travel['endDate']);
-    final formattedStart = DateFormat("dd MMM yyyy").format(startDate);
-    final formattedEnd = DateFormat("dd MMM yyyy").format(endDate);
+
+    final formattedStart = formatDateNumeric(startDate);
+final formattedEnd = formatDateNumeric(endDate);
 
     // Çok dilli veriler
     String getField(Map<String, dynamic> map) {
@@ -51,7 +59,7 @@ class TravelCard extends StatelessWidget {
         : travel['region'] ?? '';
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
       child: SizedBox(
         width: 300,
         height: 200,
@@ -64,7 +72,7 @@ class TravelCard extends StatelessWidget {
           child: Stack(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 36, 16, 16),
+                padding: EdgeInsets.fromLTRB(16, 36, 16, 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -77,17 +85,17 @@ class TravelCard extends StatelessWidget {
                         color: AppColors.background,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     // Tarihler
                     Text(
-                      "$formattedStart - $formattedEnd",
+                      "$formattedStart  -  $formattedEnd",
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
                         color: AppColors.background,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     // Country ve Region
                     Text(
                       "$country • $region",
@@ -97,7 +105,7 @@ class TravelCard extends StatelessWidget {
                         color: AppColors.background.withOpacity(0.7),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     // Açıklama
                     Text(
                       description,

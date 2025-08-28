@@ -1,5 +1,8 @@
 {
   "favorites": "Favorites",
+  "full_name": "Name Surname",
+  "account_created": "Account Created",
+  "last_login": "Last Login",
   "home": "Home",
   "profile": "Profile",
   "language": "Languages",
@@ -22,6 +25,20 @@
     "Gastronomi": "Gastronomy",
     "Macera": "Adventure"
   },
+  "months": {
+    "January": "January",
+    "February": "February",
+    "March": "March",
+    "April": "April",
+    "May": "May",
+    "June": "June",
+    "July": "July",
+    "August": "August",
+    "September": "September",
+    "October": "October",
+    "November": "November",
+    "December": "December"
+  },
   "regions": {
     "Sachsen": "Saxony",
     "Bern": "Bern",
@@ -39,5 +56,4 @@
     "Valais": "Valais",
     "Salzburg": "Salzburg"
   }
-
 }

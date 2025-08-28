@@ -404,7 +404,7 @@ class TravelController extends GetxController {
   Rx<String?> selectedCategory = Rx<String?>(null);
   var selectedRegion = RxnString();
   var selectedCountry = RxnString();
-  var lang = "tr".obs;
+  var lang = "de".obs;
 
   Map<String, dynamic> normalizeTravelData(
     String id,
@@ -429,16 +429,18 @@ class TravelController extends GetxController {
   void onInit() {
     super.onInit();
 
-    _db.collection('travels').snapshots().listen((snapshot) {
-      travels.value = snapshot.docs.map((doc) {
-        return normalizeTravelData(doc.id, doc.data());
-      }).toList();
+    lang.value = Get.locale?.languageCode ?? "de";
 
-      _loadInitialFavorites();
-    });
+  _db.collection('travels').snapshots().listen((snapshot) {
+    travels.value = snapshot.docs.map((doc) {
+      return normalizeTravelData(doc.id, doc.data());
+    }).toList();
 
-    _loadUserFavorites();
-  }
+    _loadInitialFavorites();
+  });
+
+  _loadUserFavorites();
+}
 
   void _loadInitialFavorites() {
     for (var t in travels) {

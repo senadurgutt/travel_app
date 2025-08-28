@@ -49,7 +49,7 @@ class FavoritesPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                category.value, // ✅ ekranda görünen dil
+                category.value, //ekranda görünen dil
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
