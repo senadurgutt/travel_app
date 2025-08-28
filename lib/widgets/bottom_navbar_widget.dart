@@ -18,15 +18,15 @@ class BottomNavBar extends StatelessWidget {
           items: [
             BottomNavigationBarItem(
               icon: const Icon(Icons.favorite),
-              label: pageKeys[0].tr, // ✅ JSON’dan çeviri
+              label: pageKeys[0].tr,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.home),
-              label: pageKeys[1].tr, // ✅ JSON’dan çeviri
+              label: pageKeys[1].tr,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.person),
-              label: pageKeys[2].tr, // ✅ JSON’dan çeviri
+              label: pageKeys[2].tr,
             ),
           ],
         ));
