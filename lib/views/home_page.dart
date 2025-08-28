@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:travel_app/controllers/travel_controller.dart';
+import 'package:travel_app/utils/colors.dart';
 import 'package:travel_app/widgets/travel_cards_widget.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
   final TravelController travelController = Get.put(TravelController());
+  final PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +37,8 @@ class HomePage extends StatelessWidget {
                     : <String>[];
 
                 return _buildDropdown(
-                  value:
-                      countryItems.contains(
-                        travelController.selectedCountry.value,
-                      )
+                  value: countryItems.contains(
+                          travelController.selectedCountry.value)
                       ? travelController.selectedCountry.value
                       : null,
                   hint: "select_country".tr,
@@ -57,17 +58,13 @@ class HomePage extends StatelessWidget {
               Obx(() {
                 final canPickRegion =
                     travelController.selectedCategory.value != null &&
-                    travelController.selectedCountry.value != null;
-
-                final regionItems = canPickRegion
-                    ? travelController.regions
-                    : <String>[];
+                        travelController.selectedCountry.value != null;
+                final regionItems =
+                    canPickRegion ? travelController.regions : <String>[];
 
                 return _buildDropdown(
-                  value:
-                      regionItems.contains(
-                        travelController.selectedRegion.value,
-                      )
+                  value: regionItems.contains(
+                          travelController.selectedRegion.value)
                       ? travelController.selectedRegion.value
                       : null,
                   hint: "select_region".tr,
@@ -82,41 +79,54 @@ class HomePage extends StatelessWidget {
 
               SizedBox(height: 16),
 
-              // Kart Listesi
-              Expanded(
-                child: Obx(() {
-                  final travels = travelController.filteredTravels;
+              // Kart Listesi ve Indicator
+              Obx(() {
+                final travels = travelController.filteredTravels;
 
-                  if (travels.isEmpty) {
-                    return Center(child: Text("no_travel_found".tr));
-                  }
-
-                  return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: travels.length,
-                    itemBuilder: (context, index) {
-                      final travel = travels[index];
-
-                      // Kartta category, region, country doğrudan mapten seçili dil ile
-                      final category = travel["category"] is Map
-                          ? travel["category"][travelController.lang.value]
-                          : travel["category"];
-                      final region = travel["region"] is Map
-                          ? travel["region"][travelController.lang.value]
-                          : travel["region"];
-                      final country = travel["country"] is Map
-                          ? travel["country"][travelController.lang.value]
-                          : travel["country"];
-
-                      return Padding(
-                        padding: EdgeInsets.only(right: 12),
-
-                        child: TravelCard(travel: travels[index]),
-                      );
-                    },
+                if (travels.isEmpty) {
+                  return Expanded(
+                    child: Center(child: Text("no_travel_found".tr)),
                   );
-                }),
-              ),
+                }
+
+                return Expanded(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: PageView.builder(
+                          controller: _pageController,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: travels.length,
+                          itemBuilder: (context, index) {
+                            final travel = travels[index];
+                            return Padding(
+                              padding: EdgeInsets.only(right: 12),
+                              child: TravelCard(travel: travel),
+                            );
+                          },
+                        ),
+                      ),
+
+                      SizedBox(height: 10),
+
+                      Center(
+                        child: SmoothPageIndicator(
+                          controller: _pageController,
+                          count: travels.length,
+                          effect: WormEffect(
+                            dotHeight: 8,
+                            dotWidth: 8,
+                            spacing: 6,
+                            activeDotColor: AppColors.primaryText,
+                            dotColor: AppColors.background,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                    ],
+                  ),
+                );
+              }),
             ],
           ),
         ),
@@ -143,9 +153,7 @@ class HomePage extends StatelessWidget {
         }).toList(),
         onChanged: (selectedKey) {
           if (selectedKey != null) {
-            travelController.selectedCategory.value =
-                selectedKey; // Key'i sakla
-            print("Selected category key: $selectedKey");
+            travelController.selectedCategory.value = selectedKey;
             travelController.selectedCountry.value = null;
             travelController.selectedRegion.value = null;
           }
@@ -154,7 +162,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // Tekrarlayan dropdown widget
   Widget _buildDropdown({
     required String? value,
     required String hint,

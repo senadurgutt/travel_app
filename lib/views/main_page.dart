@@ -79,7 +79,17 @@ class MainPage extends StatelessWidget {
                   ),
                   child: Material(
                     color: Colors.white,
-                    child: IndexedStack(index: currentIndex, children: pages),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: IndexedStack(
+                            index: currentIndex,
+                            children: pages,
+                          ),
+                        ),
+                        BottomNavBar(),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -87,7 +97,6 @@ class MainPage extends StatelessWidget {
           );
         }),
       ),
-      bottomNavigationBar: BottomNavBar(),
     );
   }
 
