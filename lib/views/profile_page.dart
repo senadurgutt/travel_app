@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:travel_app/controllers/auth_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -35,11 +36,15 @@ class _ProfilePageState extends State<ProfilePage> {
     if (doc.exists) {
       setState(() {
         fullName = doc['fullName'] ?? '';
+
+        final DateFormat formatter = DateFormat('dd-MM-yyyy');
+
         createdAt = doc['createdAt'] != null
-            ? (doc['createdAt'] as Timestamp).toDate().toLocal().toString().split(' ')[0]
+            ? formatter.format((doc['createdAt'] as Timestamp).toDate())
             : '';
+
         lastLogin = doc['lastLogin'] != null
-            ? (doc['lastLogin'] as Timestamp).toDate().toLocal().toString().split(' ')[0]
+            ? formatter.format((doc['lastLogin'] as Timestamp).toDate())
             : '';
       });
     }
@@ -48,7 +53,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -57,7 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(height: 20),
 
             Text(
-              'Ad Soyad:',
+              'full_name'.tr,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             SizedBox(height: 4),
@@ -65,7 +69,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
             SizedBox(height: 16),
             Text(
-              'Hesap Oluşturulma Tarihi:',
+              'account_created'.tr,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             SizedBox(height: 4),
@@ -73,7 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
             SizedBox(height: 16),
             Text(
-              'Son Giriş Tarihi:',
+              'last_login'.tr,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             SizedBox(height: 4),
