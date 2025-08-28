@@ -24,7 +24,10 @@
     "Doğa": "Doğa",
     "Kültür": "Kültür",
     "Gastronomi": "Gastronomi",
-    "Macera": "Macera"
+    "Macera": "Macera",
+    "favorites": "Favoriler",
+    "home": "Ana Sayfa",
+    "profile": "Profil"
   },
   "months": {
       "January": "Ocak",

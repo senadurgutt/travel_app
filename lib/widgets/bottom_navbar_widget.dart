@@ -7,23 +7,26 @@ class BottomNavBar extends StatelessWidget {
 
   final NavbarController navController = Get.find<NavbarController>();
 
+  // 🔑 MainPage’de kullandığımızla aynı keyler
+  final pageKeys = ["favorites", "home", "profile"];
+
   @override
   Widget build(BuildContext context) {
     return Obx(() => BottomNavigationBar(
           currentIndex: navController.currentIndex.value,
           onTap: (index) => navController.changeTab(index),
-          items: const [
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.favorite),
-              label: "Favoriler",
+              icon: const Icon(Icons.favorite),
+              label: pageKeys[0].tr, // ✅ JSON’dan çeviri
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: "Home",
+              icon: const Icon(Icons.home),
+              label: pageKeys[1].tr, // ✅ JSON’dan çeviri
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: "Profil",
+              icon: const Icon(Icons.person),
+              label: pageKeys[2].tr, // ✅ JSON’dan çeviri
             ),
           ],
         ));

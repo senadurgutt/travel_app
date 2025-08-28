@@ -23,7 +23,10 @@
     "Doğa": "Natur",
     "Kültür": "Kultur",
     "Gastronomi": "Gastronomie",
-    "Macera": "Abenteuer"
+    "Macera": "Abenteuer",
+    "favorites": "Favoriten",
+    "home": "Startseite",
+    "profile": "Profil"
   },
   "months": {
       "January": "Januar",

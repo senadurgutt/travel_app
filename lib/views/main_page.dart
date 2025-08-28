@@ -5,6 +5,7 @@ import 'package:travel_app/controllers/navbar_controller.dart';
 import 'package:travel_app/controllers/travel_controller.dart';
 import 'package:travel_app/utils/colors.dart';
 import 'package:travel_app/views/Favorites/favorites_page.dart';
+import 'package:travel_app/views/Login/pages/login_page.dart';
 import 'package:travel_app/widgets/bottom_navbar_widget.dart';
 import 'home_page.dart';
 import 'profile_page.dart';
@@ -50,7 +51,7 @@ class MainPage extends StatelessWidget {
                       // Sağ ikonlar
                       if (currentIndex == 1) // Home
                         IconButton(
-                          icon: const Icon(Icons.settings),
+                          icon: Icon(Icons.settings),
                           tooltip: "settings".tr,
                           onPressed: () {
                             _showLanguageDialog(context);
@@ -58,11 +59,11 @@ class MainPage extends StatelessWidget {
                         ),
                       if (currentIndex == 2) // Profile
                         IconButton(
-                          icon: const Icon(Icons.logout),
+                          icon: Icon(Icons.logout),
                           tooltip: "logout".tr,
                           onPressed: () async {
                             await authController.signOut();
-                            Get.offAllNamed('/login');
+                            Get.offAll(() => LoginPage());
                           },
                         ),
                     ],
@@ -73,7 +74,9 @@ class MainPage extends StatelessWidget {
               // ALT İÇERİK
               Expanded(
                 child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
                   child: Material(
                     color: Colors.white,
                     child: IndexedStack(index: currentIndex, children: pages),
@@ -89,45 +92,43 @@ class MainPage extends StatelessWidget {
   }
 
   // Dil seçimi dialogu
-  
+
   void _showLanguageDialog(BuildContext context) {
-  final travelController = Get.find<TravelController>();
+    final travelController = Get.find<TravelController>();
 
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: Text("language".tr),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: Text("turkish".tr),
-              onTap: () {
-                travelController.changeLang("tr");
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
-              title: Text("german".tr),
-              onTap: () {
-                travelController.changeLang("de");
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
-              title: Text("english".tr),
-              onTap: () {
-                travelController.changeLang("en");
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
-
-
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("language".tr),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text("turkish".tr),
+                onTap: () {
+                  travelController.changeLang("tr");
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                title: Text("german".tr),
+                onTap: () {
+                  travelController.changeLang("de");
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                title: Text("english".tr),
+                onTap: () {
+                  travelController.changeLang("en");
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
