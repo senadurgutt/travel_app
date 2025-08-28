@@ -305,7 +305,7 @@ return list;
   }
 }
 */
-
+import 'dart:ui';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -647,6 +647,14 @@ class TravelController extends GetxController {
 
   // Dil değiştirme
   void changeLang(String newLang) {
-    lang.value = newLang;
+  lang.value = newLang;
+  if (newLang == "tr") {
+    Get.updateLocale(Locale("tr", "TR"));
+  } else if (newLang == "en") {
+    Get.updateLocale(Locale("en", "US"));
+  } else if (newLang == "de") {
+    Get.updateLocale(Locale("de", "DE"));
   }
+}
+
 }
