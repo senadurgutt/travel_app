@@ -21,17 +21,7 @@ class HomePage extends StatelessWidget {
               SizedBox(height: 12),
 
               // Kategori Dropdown
-              Obx(() => _buildDropdown(
-                    value: travelController.selectedCategory.value,
-                    hint: "Kategori seçiniz",
-                    items: travelController.categories,
-                    onChanged: (val) {
-                      travelController.selectedCategory.value = val;
-                      // Dependent filtreleri sıfırla
-                      travelController.selectedCountry.value = null;
-                      travelController.selectedRegion.value = null;
-                    },
-                  )),
+              Obx(() => _buildCategoryDropdown()),
 
               SizedBox(height: 12),
 
@@ -45,12 +35,11 @@ class HomePage extends StatelessWidget {
 
                 return _buildDropdown(
                   value: travelController.selectedCountry.value,
-                  hint: "Ülke seçiniz",
+                  hint: "select_country".tr,
                   items: countryItems,
                   onChanged: canPickCountry
                       ? (val) {
                           travelController.selectedCountry.value = val;
-                          // Bölgeyi sıfırla
                           travelController.selectedRegion.value = null;
                         }
                       : null,
@@ -63,7 +52,7 @@ class HomePage extends StatelessWidget {
               Obx(() {
                 final canPickRegion =
                     travelController.selectedCategory.value != null &&
-                        travelController.selectedCountry.value != null;
+                    travelController.selectedCountry.value != null;
 
                 final regionItems = canPickRegion
                     ? travelController.regions
@@ -71,7 +60,7 @@ class HomePage extends StatelessWidget {
 
                 return _buildDropdown(
                   value: travelController.selectedRegion.value,
-                  hint: "Bölge seçiniz",
+                  hint: "select_region".tr,
                   items: regionItems,
                   onChanged: canPickRegion
                       ? (val) {
@@ -89,17 +78,29 @@ class HomePage extends StatelessWidget {
                   final travels = travelController.filteredTravels;
 
                   if (travels.isEmpty) {
-                    return Center(
-                        child: Text(
-                            "Seçilen filtrelere uygun bir seyahat bulunamadı"));
+                    return Center(child: Text("no_travel_found".tr));
                   }
 
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: travels.length,
                     itemBuilder: (context, index) {
+                      final travel = travels[index];
+
+                      // Kartta category, region, country doğrudan mapten seçili dil ile
+                      final category = travel["category"] is Map
+                          ? travel["category"][travelController.lang.value]
+                          : travel["category"];
+                      final region = travel["region"] is Map
+                          ? travel["region"][travelController.lang.value]
+                          : travel["region"];
+                      final country = travel["country"] is Map
+                          ? travel["country"][travelController.lang.value]
+                          : travel["country"];
+
                       return Padding(
                         padding: EdgeInsets.only(right: 12),
+
                         child: TravelCard(travel: travels[index]),
                       );
                     },
@@ -109,6 +110,36 @@ class HomePage extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryDropdown() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 14),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300, width: 2),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: DropdownButtonFormField<String>(
+        value: travelController.selectedCategory.value,
+        decoration: InputDecoration(border: InputBorder.none),
+        hint: Text("select_category".tr),
+        items: travelController.categories.map((categoryEntry) {
+          return DropdownMenuItem<String>(
+            value: categoryEntry.key, // Key'i value olarak kullan
+            child: Text(categoryEntry.value), // Value'yu görüntüle
+          );
+        }).toList(),
+        onChanged: (selectedKey) {
+          if (selectedKey != null) {
+            travelController.selectedCategory.value =
+                selectedKey; // Key'i sakla
+            print("Selected category key: $selectedKey");
+            travelController.selectedCountry.value = null;
+            travelController.selectedRegion.value = null;
+          }
+        },
       ),
     );
   }
@@ -131,10 +162,7 @@ class HomePage extends StatelessWidget {
         decoration: InputDecoration(border: InputBorder.none),
         hint: Text(hint),
         items: items
-            .map((e) => DropdownMenuItem<String>(
-                  value: e,
-                  child: Text(e),
-                ))
+            .map((e) => DropdownMenuItem<String>(value: e, child: Text(e)))
             .toList(),
         onChanged: onChanged,
       ),

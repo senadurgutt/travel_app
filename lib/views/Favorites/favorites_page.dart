@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -15,65 +14,90 @@ class FavoritesPage extends StatelessWidget {
       final categories = controller.categories;
 
       if (categories.isEmpty) {
-        return Center(child: Text("Hiç favori bulunamadı."));
+        return const Center(child: Text("Hiç favori bulunamadı."));
       }
+
       return ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 24),
-        children: categories.map((category) {
-          final favTravels = controller.travels.where((t) =>
-              t["category"] == category &&
-              controller.favorites.contains(t["id"]));
+  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 24),
+  children: categories.map((category) {
+    final favTravels = controller.travels.where(
+      (t) {
+        final cat = t["category"];
+        final itemCategory = cat is Map
+            ? cat[controller.lang.value] ?? cat.values.first
+            : cat;
 
-          if (favTravels.isEmpty) return SizedBox();
+        // DB'deki kategori ile category.key eşleşiyor mu?
+        return itemCategory == category.key &&
+               controller.favorites.contains(t["id"]);
+      },
+    );
 
-          return Padding(
-            padding: EdgeInsets.only(bottom: 12),
-            child: ExpansionTile(
-              trailing: SizedBox.shrink(),
-              title: Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 14, vertical: 12),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 2),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      category,
-                      style: TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.w600),
-                    ),
-                    Icon(Icons.keyboard_arrow_down),
-                  ],
+    if (favTravels.isEmpty) return const SizedBox();
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: ExpansionTile(
+        trailing: const SizedBox.shrink(),
+        title: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey, width: 2),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                category.value, // ✅ ekranda görünen dil
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              children: favTravels.map((travel) {
-                final startDate =
-                    (travel['startDate'] as Timestamp).toDate();
-                final endDate = (travel['endDate'] as Timestamp).toDate();
-                final formattedStart =
-                    DateFormat("dd MMM yyyy").format(startDate);
-                final formattedEnd =
-                    DateFormat("dd MMM yyyy").format(endDate);
+              const Icon(Icons.keyboard_arrow_down),
+            ],
+          ),
+        ),
+        children: favTravels.map((travel) {
+          final DateTime? startDate = travel['startDate'];
+          final DateTime? endDate = travel['endDate'];
 
-                return ListTile(
-                  title: Text("${travel['title']} - ${travel['country']}"),
-                  subtitle: Text("$formattedStart - $formattedEnd"),
-                  trailing: IconButton(
-                    icon: Icon(Icons.favorite,
-                        color: Colors.red, size: 17),
-                    onPressed: () {
-                      controller.toggleFavorite(travel['id']);
-                    },
-                  ),
-                );
-              }).toList(),
+          final formattedStart = startDate != null
+              ? DateFormat("dd MMM yyyy").format(startDate)
+              : '';
+          final formattedEnd = endDate != null
+              ? DateFormat("dd MMM yyyy").format(endDate)
+              : '';
+
+          final title = (travel['title'] is Map)
+              ? travel['title'][controller.lang.value] ?? ''
+              : travel['title'] ?? '';
+
+          final country = (travel['country'] is Map)
+              ? travel['country'][controller.lang.value] ?? ''
+              : travel['country'] ?? '';
+
+          return ListTile(
+            title: Text("$title - $country"),
+            subtitle: Text("$formattedStart - $formattedEnd"),
+            trailing: IconButton(
+              icon: const Icon(
+                Icons.favorite,
+                color: Colors.red,
+                size: 17,
+              ),
+              onPressed: () {
+                controller.toggleFavorite(travel['id']);
+              },
             ),
           );
         }).toList(),
-      );
+      ),
+    );
+  }).toList(),
+);
+
     });
   }
 }
